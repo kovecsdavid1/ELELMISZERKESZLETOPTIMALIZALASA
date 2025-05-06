@@ -12,6 +12,11 @@ namespace BACKEND.Data
             return _items;
         }
 
+        public List<FoodItem> validItems(List<FoodItem> foodItems)
+        {
+            return foodItems.Where(f => DateTime.TryParse(f.ExpiryDate, out _)).ToList();
+        }
+
         public void Add(FoodItem item)
         {
             _items.Add(item);
