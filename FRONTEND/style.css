@@ -1,0 +1,26 @@
+body {
+    background-color: #f8f9fa;
+}
+.card-header {
+    font-weight: bold;
+}
+#inputTable th {
+    background-color: #e9ecef;
+}
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+#results {
+    display: none;
+}
+#resultsCard {
+    border-left: 4px solid #0d6efd;
+}
+.alert {
+    margin-top: 10px;
+}
