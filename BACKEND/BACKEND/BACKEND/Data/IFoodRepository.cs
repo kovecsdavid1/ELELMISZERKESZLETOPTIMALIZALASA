@@ -1,4 +1,7 @@
-﻿namespace BACKEND.Data
+﻿using BACKEND.Models;
+using System.Collections.Generic;
+
+namespace BACKEND.Data
 {
     public interface IFoodRepository
     {
