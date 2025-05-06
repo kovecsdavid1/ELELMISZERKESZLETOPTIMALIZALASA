@@ -10,7 +10,6 @@ namespace BACKEND
 
             builder.Services.AddControllersWithViews();
 
-            // IoC
             builder.Services.AddTransient<IFoodRepository, FoodRepository>();
 
             builder.Services.AddSwaggerGen();
