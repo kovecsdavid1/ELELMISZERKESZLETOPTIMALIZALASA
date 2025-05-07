@@ -1,26 +1,15 @@
-body {
+#inventoryTable tbody tr:hover {
     background-color: #f8f9fa;
 }
-.card-header {
-    font-weight: bold;
+
+.bi-trash {
+    font-size: 1.2rem;
 }
-#inputTable th {
-    background-color: #e9ecef;
+
+#results table td {
+    vertical-align: middle;
 }
-.btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-.btn-success {
-    background-color: #198754;
-    border-color: #198754;
-}
-#results {
-    display: none;
-}
-#resultsCard {
-    border-left: 4px solid #0d6efd;
-}
-.alert {
-    margin-top: 10px;
+
+.card {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }

@@ -5,11 +5,9 @@ namespace BACKEND.Data
 {
     public interface IFoodRepository
     {
-        List<FoodItem> GetAll();
-
-        public List<FoodItem> validItems(List<FoodItem> foodItems);
-
-        void Add(FoodItem item);
-        void Remove(FoodItem item);
+        List<FoodItem> validItems(List<FoodItem> foodItems);
+        List<FoodItem> Prioritizer(List<FoodItem> foodItems);
+        List<FoodItemConsumption> ConsumptionRates(List<FoodItem> foodItems);
+        List<FoodItem> ToBuy(List<FoodItem> foodItems);
     }
 }

@@ -11,43 +11,36 @@ namespace BACKEND.Controllers
     [Route("[controller]")]
     public class FoodItemController : ControllerBase
     {
+        private readonly IFoodRepository _foodRepository; 
 
-
-        IFoodRepository foodRepository_;
         public FoodItemController(IFoodRepository foodRepository)
         {
-            foodRepository_ = foodRepository;
+            _foodRepository = foodRepository; 
         }
-
-
 
         [HttpPost]
         public IActionResult OptimizeInventory([FromBody] List<FoodItem> foodItems)
         {
-
-
             try
             {
-                //Hibás dátumok kiszűrése
-                var validItems = foodRepository_.validItems(foodItems);
+                var validItems = _foodRepository.validItems(foodItems) ?? new List<FoodItem>();
 
-                //Prioritizálás
                 var prioritized = validItems
                     .OrderBy(f => DateTime.Parse(f.ExpiryDate))
                     .Select(f => new { f.Name, f.ExpiryDate })
                     .ToList();
 
-                //Fogyasztási arány
-                var consumptionRates = validItems.Select(f =>
-                {
-                    var expiryDate = DateTime.Parse(f.ExpiryDate);
-                    var daysLeft = (expiryDate - DateTime.Now).Days;
-                    daysLeft = daysLeft <= 0 ? 1 : daysLeft; // Nullával ne osszunk
-                    var rate = Math.Round((f.Quantity / (double)daysLeft) * 30, 2);
-                    return new { f.Name, Rate = rate };
-                }).ToList();
+                var consumptionRates = validItems
+                    .Select(f =>
+                    {
+                        var expiryDate = DateTime.Parse(f.ExpiryDate);
+                        var daysLeft = (expiryDate - DateTime.Now).Days;
+                        daysLeft = daysLeft <= 0 ? 1 : daysLeft;
+                        var rate = Math.Round((f.Quantity / (double)daysLeft) * 30, 2);
+                        return new { f.Name, Rate = rate };
+                    })
+                    .ToList();
 
-                //Javaslatok
                 var expiringSoon = validItems
                     .Where(f => (DateTime.Parse(f.ExpiryDate) - DateTime.Now).Days <= 7)
                     .Select(f => f.Name)
@@ -62,12 +55,16 @@ namespace BACKEND.Controllers
                 {
                     Prioritized = prioritized,
                     ConsumptionRates = consumptionRates,
-                    Recommendations = new { ExpiringSoon = expiringSoon, HighConsumption = highConsumption }
+                    Recommendations = new
+                    {
+                        ExpiringSoon = expiringSoon,
+                        HighConsumption = highConsumption
+                    }
                 });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Hiba történt: {ex.Message}");
+                return StatusCode(500, $"Hiba: {ex.Message}");
             }
         }
     }
