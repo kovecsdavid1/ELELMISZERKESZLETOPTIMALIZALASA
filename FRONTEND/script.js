@@ -10,6 +10,16 @@ function addItem() {
         return;
     }
 
+    const selectedDate = new Date(expiry);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (selectedDate < today) {
+        alert("A lejárati dátum nem lehet múltbeli!");
+        document.getElementById('itemExpiry').value = "";
+        return;
+    }
+
     inventory.push({
         Name: name,
         Quantity: quantity,
@@ -20,6 +30,8 @@ function addItem() {
     clearInputs();
 }
 
+document.getElementById('itemExpiry').min = new Date().toISOString().split('T')[0];
+
 function updateInventoryTable() {
     const tbody = document.querySelector('#inventoryTable tbody');
     tbody.innerHTML = inventory.map((item, index) => `
@@ -29,7 +41,7 @@ function updateInventoryTable() {
             <td>${item.ExpiryDate}</td>
             <td>
                 <button class="btn btn-danger btn-sm" onclick="deleteItem(${index})">
-                    <i class="bi bi-trash"></i>
+                    <i class="bi bi-trash">Törlés</i>
                 </button>
             </td>
         </tr>
@@ -72,8 +84,8 @@ function displayResults(result) {
 
     resultsDiv.innerHTML = `
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5>Prioritási lista</h5>
+            <div class="card-header bg-success text-white">
+                <h5>Leghamarabb lejáró élelmiszerek</h5>
             </div>
             <table class="table">
                 <tbody>
@@ -85,7 +97,7 @@ function displayResults(result) {
         </div>
 
         <div class="card mb-4">
-            <div class="card-header bg-info text-white">
+            <div class="card-header bg-warning text-white">
                 <h5>Havi fogyasztási arány</h5>
             </div>
             <table class="table">
@@ -98,7 +110,7 @@ function displayResults(result) {
         </div>
 
         <div class="card mb-4">
-            <div class="card-header bg-info text-white">
+            <div class="card-header bg-danger text-white">
                 <h5>Javasolt vásárolandó termékek lejárat alapján</h5>
             </div>
                 <ul>
