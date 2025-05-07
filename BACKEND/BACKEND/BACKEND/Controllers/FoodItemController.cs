@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Xml.Linq;
 
 namespace BACKEND.Controllers
 {
@@ -31,19 +33,27 @@ namespace BACKEND.Controllers
                     .ToList();
 
                 var consumptionRates = validItems
-                    .Select(f =>
+                .GroupBy(f => f.Name)
+                .Select(g => new Data.FoodItemConsumption
+                {
+                    Name = g.Key,
+                    Rate = g.Sum(f =>
                     {
                         var expiryDate = DateTime.Parse(f.ExpiryDate);
-                        var daysLeft = (expiryDate - DateTime.Now).Days;
+                        var daysLeft = (expiryDate - DateTime.Now).Days + 1;
+                        Console.WriteLine(expiryDate.Day);
+                        Console.WriteLine(DateTime.Now.Day);
+                        Console.WriteLine(daysLeft);
                         daysLeft = daysLeft <= 0 ? 1 : daysLeft;
-                        var rate = Math.Round((f.Quantity / (double)daysLeft) * 30, 2);
-                        return new { f.Name, Rate = rate };
+                        return Math.Round((f.Quantity / (double)daysLeft) * 30, 2);
                     })
-                    .ToList();
+                })
+                .ToList();
 
                 var expiringSoon = validItems
-                    .Where(f => (DateTime.Parse(f.ExpiryDate) - DateTime.Now).Days <= 7)
-                    .Select(f => f.Name)
+                    .Where(f => (DateTime.Parse(f.ExpiryDate) - DateTime.Now).Days <= 5)
+                    .GroupBy(f => f.Name)
+                    .Select(g => g.Key)
                     .ToList();
 
                 var highConsumption = consumptionRates
